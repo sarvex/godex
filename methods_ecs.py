@@ -26,14 +26,14 @@ def generate_system_structs():
         # If the path exist and is not in development:
         with open(path) as f:
             firstline = f.readline().rstrip()
-            if firstline == "/*" + get_version() + "*/":
+            if firstline == f"/*{get_version()}*/":
                 # This file is already generated, nothing more to do.
-                print("This file `" + path + "` is already generated.")
+                print(f"This file `{path}` is already generated.")
                 return
 
-    print("Generate file: `" + path + "`.")
+    print(f"Generate file: `{path}`.")
     f = open(path, "w")
-    f.write("/*" + get_version() + "*/\n")
+    f.write(f"/*{get_version()}" + "*/\n")
     f.write("/* THIS FILE IS GENERATED DO NOT EDIT */\n\n")
     f.write(
         "/* This file contains the structure that each system creates with the user defined system arguments. */\n\n"
@@ -45,18 +45,18 @@ def generate_system_structs():
 
         f.write("template <")
         for p in range(i):
-            f.write("class P" + str(p))
+            f.write(f"class P{str(p)}")
             if p < (i - 1):
                 f.write(", ")
         f.write(">\n")
 
-        f.write("struct SystemExecutionData" + str(i) + " {\n")
+        f.write(f"struct SystemExecutionData{str(i)}" + " {\n")
         for p in range(i):
-            f.write("   DataFetcher<P" + str(p) + "> p" + str(p) + ";\n")
+            f.write(f"   DataFetcher<P{str(p)}> p{str(p)}" + ";\n")
 
-        f.write("   SystemExecutionData" + str(i) + "(World* p_world) :\n")
+        f.write(f"   SystemExecutionData{str(i)}" + "(World* p_world) :\n")
         for p in range(i):
-            f.write("     p" + str(p) + "(p_world)")
+            f.write(f"     p{str(p)}(p_world)")
             if p < (i - 1):
                 f.write(",\n")
         f.write(" {}\n")
@@ -66,14 +66,14 @@ def generate_system_structs():
         # Generate size_of func
         f.write("template <")
         for p in range(i):
-            f.write("class P" + str(p))
+            f.write(f"class P{str(p)}")
             if p < (i - 1):
                 f.write(", ")
         f.write(">\n")
         f.write("uint64_t system_data_size_of() {\n")
-        f.write("   return sizeof(SystemExecutionData" + str(i) + "<")
+        f.write(f"   return sizeof(SystemExecutionData{str(i)}<")
         for p in range(i):
-            f.write("P" + str(p))
+            f.write(f"P{str(p)}")
             if p < (i - 1):
                 f.write(", ")
         f.write(">);\n")
@@ -82,14 +82,14 @@ def generate_system_structs():
         # Generate new placement func
         f.write("template <")
         for p in range(i):
-            f.write("class P" + str(p))
+            f.write(f"class P{str(p)}")
             if p < (i - 1):
                 f.write(", ")
         f.write(">\n")
         f.write("void system_data_new_placement(uint8_t* p_mem, World* p_world) {\n")
-        f.write("   new (p_mem) SystemExecutionData" + str(i) + "<")
+        f.write(f"   new (p_mem) SystemExecutionData{str(i)}<")
         for p in range(i):
-            f.write("P" + str(p))
+            f.write(f"P{str(p)}")
             if p < (i - 1):
                 f.write(", ")
         f.write(">(p_world);\n")
@@ -98,19 +98,19 @@ def generate_system_structs():
         # Generate delete placement func
         f.write("template <")
         for p in range(i):
-            f.write("class P" + str(p))
+            f.write(f"class P{str(p)}")
             if p < (i - 1):
                 f.write(", ")
         f.write(">\n")
         f.write("void system_data_delete_placement(uint8_t* p_mem) {\n")
-        f.write("   ((SystemExecutionData" + str(i) + "<")
+        f.write(f"   ((SystemExecutionData{str(i)}<")
         for p in range(i):
-            f.write("P" + str(p))
+            f.write(f"P{str(p)}")
             if p < (i - 1):
                 f.write(", ")
-        f.write(">*)p_mem)->~SystemExecutionData" + str(i) + "<")
+        f.write(f">*)p_mem)->~SystemExecutionData{str(i)}<")
         for p in range(i):
-            f.write("P" + str(p))
+            f.write(f"P{str(p)}")
             if p < (i - 1):
                 f.write(", ")
         f.write(">();\n")
@@ -119,19 +119,19 @@ def generate_system_structs():
         # SystemData set world notification active
         f.write("template <")
         for p in range(i):
-            f.write("class P" + str(p))
+            f.write(f"class P{str(p)}")
             if p < (i - 1):
                 f.write(", ")
         f.write(">\n")
         f.write("void system_data_set_world_notificatin_active(uint8_t* p_mem, bool p_active) {\n")
-        f.write("   auto d = ((SystemExecutionData" + str(i) + "<")
+        f.write(f"   auto d = ((SystemExecutionData{str(i)}<")
         for p in range(i):
-            f.write("P" + str(p))
+            f.write(f"P{str(p)}")
             if p < (i - 1):
                 f.write(", ")
         f.write(">*)p_mem);\n")
         for p in range(i):
-            f.write("   d->p" + str(p) + ".set_active(p_active);\n")
+            f.write(f"   d->p{str(p)}" + ".set_active(p_active);\n")
         f.write("}\n")
         f.write("\n")
 
@@ -143,14 +143,14 @@ def internal_generate_system_exe_funcs(system_type, max_parameters, path):
         # If the path exist and is not in development:
         with open(path) as f:
             firstline = f.readline().rstrip()
-            if firstline == "/*" + get_version() + "*/":
+            if firstline == f"/*{get_version()}*/":
                 # This file is already generated, nothing more to do.
-                print("This file `" + path + "` is already generated.")
+                print(f"This file `{path}` is already generated.")
                 return
 
-    print("Generate file: `" + path + "`.")
+    print(f"Generate file: `{path}`.")
     f = open(path, "w")
-    f.write("/*" + get_version() + "*/\n")
+    f.write(f"/*{get_version()}" + "*/\n")
     f.write("/* THIS FILE IS GENERATED DO NOT EDIT */\n")
 
     for i in range(max_parameters + 1):
@@ -159,7 +159,7 @@ def internal_generate_system_exe_funcs(system_type, max_parameters, path):
 
         f.write("template <")
         for p in range(i):
-            f.write("class P" + str(p))
+            f.write(f"class P{str(p)}")
             if p < (i - 1):
                 f.write(", ")
         f.write(">\n")
@@ -172,14 +172,14 @@ def internal_generate_system_exe_funcs(system_type, max_parameters, path):
             f.write("void system_exec_func(uint8_t* p_mem, World *p_world, void (*p_system)(")
 
         for p in range(i):
-            f.write("P" + str(p))
+            f.write(f"P{str(p)}")
             if p < (i - 1):
                 f.write(", ")
         f.write(")) {\n")
 
         f.write("	auto d = ((SystemExecutionData" + str(i) + "<")
         for p in range(i):
-            f.write("P" + str(p))
+            f.write(f"P{str(p)}")
             if p < (i - 1):
                 f.write(", ")
         f.write(">*)p_mem);\n")
